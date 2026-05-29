@@ -26,7 +26,7 @@ __device__ void md5(unsigned long long val, unsigned int* out) {
     for (int i = 0; i < 8; i++)
         buf[i] = (val >> (i * 8)) & 0xFF;
 
-    // Padding : bit "1" puis taille en bits sur 64 bits
+    // Padding bit 1 puis taille en bits sur 64 bits
     buf[8] = 0x80;
     unsigned long long bits = 64;
     for (int i = 0; i < 8; i++)
@@ -41,13 +41,13 @@ __device__ void md5(unsigned long long val, unsigned int* out) {
             | (buf[i * 4 + 3] << 24);
     }
 
-    // Initialisation
+    //initialisation
     unsigned int a = 0x67452301;
     unsigned int b = 0xEFCDAB89;
     unsigned int c = 0x98BADCFE;
     unsigned int d = 0x10325476;
 
-    // Boucle principale
+    //boucle principale
     for (int i = 0; i < 64; i++) {
         unsigned int f, g;
         if (i < 16) {
@@ -76,7 +76,7 @@ __device__ void md5(unsigned long long val, unsigned int* out) {
     out[0] = 0x67452301 + a;
     out[1] = 0xEFCDAB89 + b;
 }
-// calcule un hash MD5 tronqué pour chaque thread
+// calcule un hash MD5 tronquÃ© pour chaque thread
 __global__ void kernel(unsigned long long start, unsigned long long* hashes) {
     int id = blockIdx.x * blockDim.x + threadIdx.x; //id unique thrad
 
@@ -84,10 +84,10 @@ __global__ void kernel(unsigned long long start, unsigned long long* hashes) {
     md5(start + id, digest);
 
     unsigned long long h = ((unsigned long long)digest[1] << 32) | digest[0];
-    if (BITS < 64) // Tronque hash à BITS bits si nécessaire
+    if (BITS < 64) // Tronque hash Ã  BITS bits si nÃ©cessaire
         h = h & ((1ULL << BITS) - 1);
 
-    hashes[id] = h; // Stock résultat dans tableau GPU
+    hashes[id] = h; // Stock rÃ©sultat dans tableau GPU
 }
 
 int main() {
@@ -102,10 +102,10 @@ int main() {
     // Allocations
     unsigned long long* d_h; //declare pointeur GPU
     unsigned long long* h_h = (unsigned long long*)malloc(N * sizeof(unsigned long long)); //alloc tableau N entiers 64 en memoire CPU RAM pour recuperer hash GPU
-    cudaMalloc(&d_h, N * sizeof(unsigned long long)); //alloc meme blabla mais mémoire GPU VRAM
+    cudaMalloc(&d_h, N * sizeof(unsigned long long)); //alloc meme blabla mais mÃ©moire GPU VRAM
 
-    std::unordered_map<unsigned long long, unsigned long long> table; // Dictionnaire pour stocker hash message et détecter les collisions
-    unsigned long long start = 0; // Début de la plage de valeurs testées
+    std::unordered_map<unsigned long long, unsigned long long> table; // Dictionnaire pour stocker hash message et dÃ©tecter les collisions
+    unsigned long long start = 0; // DÃ©but de la plage de valeurs testÃ©es
 
     while (1) {
         kernel << <N / 256, 256 >> > (start, d_h); 
