@@ -1,10 +1,1 @@
-Projet de fin d'année : comprendre pourquoi MD5 est "cassé" en recréant une collision avec une carte graphique NVIDIA RTX 3060 Ti en CUDA C++.
-
-
-Prérequis :
-   - NVIDIA CUDA Toolkit
-   - Carte compatible (testé sur RTX 3060 Ti, sm_86)
-
-Structure du Projet :
-   - md5_collision.cu
-   - Journal de Bord SAE 2.04
+Développement d'un programme de recherche de collisions MD5 sur GPU. Implémentation partielle de MD5 en CUDA, gestion des threads et de la mémoire. Obtention d'une collision jusqu'à 52 bits. Début des recherches sur les collisions 128 bits et sur un programme de reverse MD5 par dictionnaire.
